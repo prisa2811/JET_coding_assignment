@@ -19,13 +19,20 @@ def get_restaurant_data(postcode, no_of_restaurants):
 
     url = f"https://uk.api.just-eat.io/discovery/uk/restaurants/enriched/bypostcode/{postcode}"
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"}
-    response = requests.get(url, headers=headers)
-    response.raise_for_status()
-    data = response.json()
-    df_restaurants = pd.DataFrame(data['restaurants'])
-    df_restaurants = df_restaurants.head(no_of_restaurants)
 
-    return df_restaurants
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()  # Raise an exception for non-200 status codes
+        data = response.json()
+        df_restaurants = pd.DataFrame(data['restaurants'])
+        df_restaurants = df_restaurants.head(no_of_restaurants)
+        
+        return df_restaurants
+    
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while fetching data: {e}")
+        return None 
+
 
 def processing_restaurant_data(df_restaurants):
 
@@ -89,9 +96,15 @@ def main():
     """
     postcode = input("Enter a UK postcode to fetch restaurant data: \n")
     no_of_restaurants = int(input('Number of restaurants data to be displayed ?\n'))
+
     restaurants = get_restaurant_data(postcode, no_of_restaurants)
-    restaurants = processing_restaurant_data(restaurants)
-    display_restaurant_data(restaurants)
+
+    if restaurants is not None:
+        restaurants = processing_restaurant_data(restaurants)
+        display_restaurant_data(restaurants)
+    else:
+        print("An error occurred while fetching data. Please try again later.")
+
     
 
 if __name__ == "__main__":
