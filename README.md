@@ -37,8 +37,13 @@ python coding_assignment.py
 - [pandas](https://pypi.org/project/pandas/): For data manipulation and analysis.
 - [warnings](https://docs.python.org/3/library/warnings.html): For ignoring warnings.
 
+## Addressed Improvements
+
+- API error handling
+
 ## Author:
 
 - [Lakshmi Narasimha Priyatham Kumanduri](https://github.com/prisa2811)
 
 ## License:
+c645477
